@@ -1450,7 +1450,7 @@ namespace FluentFTP {
 		/// <param name="checkIfFileExists">Only set this to false if you are SURE that the file does not exist. If true, it reads the file size and saves it into the stream length.</param>
 		/// <returns>A stream for writing to the file on the server</returns>
 		/// <example><code source="..\Examples\OpenWrite.cs" lang="cs" /></example>
-		public virtual Stream OpenWrite(string path, FtpDataType type, bool checkIfFileExists) {
+		public virtual Stream OpenWrite(string path, FtpDataType type, bool checkIfFileExists, string additionalStorCommands = "") {
 			// verify args
 			if (path.IsBlank()) {
 				throw new ArgumentException("Required parameter is null or blank.", "path");
@@ -1477,7 +1477,7 @@ namespace FluentFTP {
 
 				client.SetDataType(type);
 				length = checkIfFileExists ? client.GetFileSize(path) : 0;
-				stream = client.OpenDataStream("STOR " + path.GetFtpPath(), 0);
+				stream = client.OpenDataStream("STOR " + path.GetFtpPath() + additionalStorCommands, 0);
 
 				if (length > 0 && stream != null) {
 					stream.SetLength(length);
@@ -1546,7 +1546,7 @@ namespace FluentFTP {
 		/// <param name="checkIfFileExists">Only set this to false if you are SURE that the file does not exist. If true, it reads the file size and saves it into the stream length.</param>
 		/// <param name="token">The token that can be used to cancel the entire process</param>
 		/// <returns>A stream for writing to the file on the server</returns>
-		public virtual async Task<Stream> OpenWriteAsync(string path, FtpDataType type, bool checkIfFileExists, CancellationToken token = default(CancellationToken)) {
+		public virtual async Task<Stream> OpenWriteAsync(string path, FtpDataType type, bool checkIfFileExists, CancellationToken token = default(CancellationToken), string additionalStorCommands = "") {
 			// verify args
 			if (path.IsBlank()) {
 				throw new ArgumentException("Required parameter is null or blank.", "path");
@@ -1570,7 +1570,7 @@ namespace FluentFTP {
 
 			await client.SetDataTypeAsync(type, token);
 			length = checkIfFileExists ? await client.GetFileSizeAsync(path, token) : 0;
-			stream = await client.OpenDataStreamAsync("STOR " + path.GetFtpPath(), 0, token);
+			stream = await client.OpenDataStreamAsync("STOR " + path.GetFtpPath() + additionalStorCommands, 0, token);
 
 			if (length > 0 && stream != null) {
 				stream.SetLength(length);
@@ -1586,8 +1586,8 @@ namespace FluentFTP {
 		/// <param name="type">ASCII/Binary</param>
 		/// <param name="token">The token that can be used to cancel the entire process</param>
 		/// <returns>A stream for writing to the file on the server</returns>
-		public Task<Stream> OpenWriteAsync(string path, FtpDataType type, CancellationToken token = default(CancellationToken)) {
-			return OpenWriteAsync(path, type, true, token);
+		public Task<Stream> OpenWriteAsync(string path, FtpDataType type, CancellationToken token = default(CancellationToken), string additionalStorCommands = "") {
+			return OpenWriteAsync(path, type, true, token, additionalStorCommands);
 		}
 
 		/// <summary>
@@ -1596,8 +1596,8 @@ namespace FluentFTP {
 		/// <param name="path">Full or relative path of the file</param>
 		/// <param name="token">The token that can be used to cancel the entire process</param>
 		/// <returns>A stream for writing to the file on the server</returns>
-		public Task<Stream> OpenWriteAsync(string path, CancellationToken token = default(CancellationToken)) {
-			return OpenWriteAsync(path, FtpDataType.Binary, true, token);
+		public Task<Stream> OpenWriteAsync(string path, CancellationToken token = default(CancellationToken), string additionalStorCommands = "") {
+			return OpenWriteAsync(path, FtpDataType.Binary, true, token, additionalStorCommands);
 		}
 #endif
 

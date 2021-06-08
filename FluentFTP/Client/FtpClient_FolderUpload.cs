@@ -367,7 +367,7 @@ namespace FluentFTP {
 					var metaProgress = new FtpProgress(filesToUpload.Count, r);
 
 					// upload the file
-					var transferred = UploadFileFromFile(result.LocalPath, result.RemotePath, false, existsModeToUse, false, false, verifyOptions, progress, metaProgress);
+					var transferred = UploadFileFromFile(result.LocalPath, result.RemotePath, false, existsModeToUse, false, false, verifyOptions, progress, metaProgress, "");
 					result.IsSuccess = transferred.IsSuccess();
 					result.IsSkipped = transferred == FtpStatus.Skipped;
 
@@ -435,7 +435,7 @@ namespace FluentFTP {
 					var metaProgress = new FtpProgress(filesToUpload.Count, r);
 
 					// upload the file
-					var transferred = await UploadFileFromFileAsync(result.LocalPath, result.RemotePath, false, existsModeToUse, false, false, verifyOptions, token, progress, metaProgress);
+					var transferred = await UploadFileFromFileAsync(result.LocalPath, result.RemotePath, false, existsModeToUse, false, false, verifyOptions, token, progress, metaProgress, "");
 					result.IsSuccess = transferred.IsSuccess();
 					result.IsSkipped = transferred == FtpStatus.Skipped;
 
